@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Valid_User } = require('../middleware/auth_middleware');
-const { Login_Here, Update_Profile, Register_Here } = require('../controller/user_controller');
+const { Login_Here, Update_Profile, Register_Here } = require('../controllers/user_controller');
 
 
 /* user Private Routes start Here */
