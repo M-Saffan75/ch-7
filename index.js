@@ -12,7 +12,9 @@ dotenv.config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/documents/uploads', express.static('documents/uploads'));
+app.use('/documents/profile/uploads', express.static('documents/profile/uploads'));
+app.use('/documents/certificate/uploads', express.static('documents/certificate/uploads'));
+app.use('/documents/national/uploads', express.static('documents/national/uploads'));
 
 const port = process.env.PORT || 4000;
 const DATABASE_URL = process.env.DATABASE_URL;

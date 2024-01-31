@@ -12,7 +12,7 @@ dotenv.config();
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './documents/uploads');
+        cb(null, './documents/profile/uploads');
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
@@ -20,6 +20,33 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+
+
+const storage1 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './documents/national/uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload1 = multer({ storage: storage1 });
+
+
+
+const storage2 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './documents/certificate/uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload2 = multer({ storage: storage2 });
+
 
 
 // Register Api 
@@ -109,7 +136,7 @@ const Update_Profile = async (req, res) => {
                     { profileImage: req.file.filename },
                     { new: true }
                 );
-                return res.status(200).json({ message: 'Image uploaded successfully.', code: 200, updatedUser: updatedUser, });
+                return res.status(200).json({ message: 'Profile uploaded successfully.', code: 200, updatedUser: updatedUser,status: 'success', });
             } else {
                 return res.status(400).json({ message: 'No file uploaded.', status: 'failed', code: 400 });
             }
@@ -121,6 +148,61 @@ const Update_Profile = async (req, res) => {
 };
 
 
+
+//  Upload national Api
+
+const Update_National = async (req, res) => {
+    try {
+        upload1.single('nationalId')(req, res, async function (err) {
+            if (err) {
+                return res.status(402).json({ message: 'File upload failed.', status: 'failed', code: 402 });
+            }
+            if (req.file) {
+                const updatedUser = await User.findByIdAndUpdate(
+                    req.user._id,
+                    { nationalId: req.file.filename },
+                    { new: true }
+                );
+                return res.status(200).json({ message: 'NationalId uploaded successfully.', code: 200, updatedUser: updatedUser, status: 'success',});
+            } else {
+                return res.status(400).json({ message: 'No file uploaded.', status: 'failed', code: 400 });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server Error', status: 'failed' });
+    }
+};
+
+
+//  Upload national Api
+
+const Update_Cerificate = async (req, res) => {
+    try {
+        upload2.single('certificate')(req, res, async function (err) {
+            if (err) {
+                return res.status(402).json({ message: 'File upload failed.', status: 'failed', code: 402 });
+            }
+            if (req.file) {
+                const updatedUser = await User.findByIdAndUpdate(
+                    req.user._id,
+                    { certificate: req.file.filename },
+                    { new: true }
+                );
+                return res.status(200).json({ message: 'Certificate uploaded successfully.', code: 200, updatedUser: updatedUser,status: 'success', });
+            } else {
+                return res.status(400).json({ message: 'No file uploaded.', status: 'failed', code: 400 });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server Error', status: 'failed' });
+    }
+};
+
+
+
 module.exports = {
-    Register_Here, Login_Here,Update_Profile, 
+    Register_Here, Login_Here, Update_Profile,
+    Update_Cerificate, Update_National
 }
