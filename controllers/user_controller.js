@@ -251,5 +251,5 @@ const Payment_User = async (req, res) => {
 
 module.exports = {
     Register_Here, Login_Here, Update_Profile, Current_User,
-    Update_Cerificate, Update_National, Current_User
+    Update_Cerificate, Update_National, Current_User,Payment_User
 }

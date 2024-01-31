@@ -23,6 +23,7 @@ router.get('/current/user', Current_User);
 router.post('/update/profile', Update_Profile);
 router.post('/update/national', Update_National);
 router.post('/update/certificate', Update_Cerificate);
+// router.post('/user/payment', Payment_User);
 
 
 /* user Public Routes End Here */
