@@ -201,8 +201,24 @@ const Update_Cerificate = async (req, res) => {
 };
 
 
+// Curretn User Api
+
+const Current_User = async (req, res) => {
+    try {
+        const currentUser = req.user;
+
+        if (!currentUser) {
+            return res.status(404).json({ status: "failed", message: "User Not Found" });
+        }
+        return res.status(200).json({ status: "success", data: currentUser });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: "error", message: "Internal Server Error" });
+    }
+};
+
 
 module.exports = {
-    Register_Here, Login_Here, Update_Profile,
-    Update_Cerificate, Update_National
+    Register_Here, Login_Here, Update_Profile,Current_User,
+    Update_Cerificate, Update_National,Current_User
 }
