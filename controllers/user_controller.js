@@ -4,6 +4,7 @@ const User = require('../models/user.js');
 const multer = require('multer');
 const dotenv = require('dotenv');
 dotenv.config();
+const stripe = require('stripe')('sk_test_51ORxMILO9XBdvOdqPYc34ob6wRVDnIodcueGbFVplKB2b5aiDQO02pxhDvJaNuDEX9UTROpXkTZlre97wzCqKISC00MmPpf5SB')
 
 
 
@@ -136,7 +137,7 @@ const Update_Profile = async (req, res) => {
                     { profileImage: req.file.filename },
                     { new: true }
                 );
-                return res.status(200).json({ message: 'Profile uploaded successfully.', code: 200, updatedUser: updatedUser,status: 'success', });
+                return res.status(200).json({ message: 'Profile uploaded successfully.', code: 200, updatedUser: updatedUser, status: 'success', });
             } else {
                 return res.status(400).json({ message: 'No file uploaded.', status: 'failed', code: 400 });
             }
@@ -163,7 +164,7 @@ const Update_National = async (req, res) => {
                     { nationalId: req.file.filename },
                     { new: true }
                 );
-                return res.status(200).json({ message: 'NationalId uploaded successfully.', code: 200, updatedUser: updatedUser, status: 'success',});
+                return res.status(200).json({ message: 'NationalId uploaded successfully.', code: 200, updatedUser: updatedUser, status: 'success', });
             } else {
                 return res.status(400).json({ message: 'No file uploaded.', status: 'failed', code: 400 });
             }
@@ -189,7 +190,7 @@ const Update_Cerificate = async (req, res) => {
                     { certificate: req.file.filename },
                     { new: true }
                 );
-                return res.status(200).json({ message: 'Certificate uploaded successfully.', code: 200, updatedUser: updatedUser,status: 'success', });
+                return res.status(200).json({ message: 'Certificate uploaded successfully.', code: 200, updatedUser: updatedUser, status: 'success', });
             } else {
                 return res.status(400).json({ message: 'No file uploaded.', status: 'failed', code: 400 });
             }
@@ -218,7 +219,37 @@ const Current_User = async (req, res) => {
 };
 
 
+
+const Payment_User = async (req, res) => {
+
+    const { amount, currency } = req.body
+
+    if (!amount) {
+        return res.status(403).json({ message: 'fields are required.', status: 'failed', code: 403 });
+    }
+
+    const customer = await stripe.customers.create();
+    const ephemeralKey = await stripe.ephemeralKeys.create(
+        { customer: customer.id },
+        { apiVersion: '2023-10-16' }
+    );
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: 'usd',
+        customer: customer.id,
+        payment_method_types: ['card']
+    });
+
+    res.json({
+        paymentIntent: paymentIntent.client_secret,
+        ephemeralKey: ephemeralKey.secret,
+        customer: customer.id,
+        message: 'Payment Key has been added',
+        status: 'success'
+    });
+};
+
 module.exports = {
-    Register_Here, Login_Here, Update_Profile,Current_User,
-    Update_Cerificate, Update_National,Current_User
+    Register_Here, Login_Here, Update_Profile, Current_User,
+    Update_Cerificate, Update_National, Current_User
 }
